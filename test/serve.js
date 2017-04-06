@@ -32,6 +32,28 @@ module.exports = function () {
 			});
 		});
 
+		it( 'should parse range requests', function ( done ) {
+			var task = require( './sample/foo' ).serve({
+				port: 6789
+			});
+
+			task.on( 'ready', function () {
+				request( 'http://localhost:6789/foo.md', {
+					headers: {
+						'Range': 'bytes=0-3'
+					}
+				} ).then( function ( body ) {
+					assert.equal( body.trim(), 'foo:' );
+					task.close().then( done );
+				});
+			});
+
+			task.on( 'error', function ( err ) {
+				task.close();
+				done( err );
+			});
+		});
+
 		it( 'should default to port 4567', function ( done ) {
 			var task = require( './sample/foo' ).serve();
 
