@@ -26,7 +26,7 @@ export default function serveFile ( filepath, request, response ) {
 
 	return stat( filepath ).then( stats => {
 		response.setHeader( 'Content-Type', mime.lookup( filepath ) );
-		let fileStream = createReadStream( filepath );
+		const fileStream = createReadStream( filepath );
 
 		if ( request.headers['range'] ) {
 			response.setHeader( 'Accept-Ranges', 'bytes' );
@@ -52,7 +52,7 @@ export default function serveFile ( filepath, request, response ) {
 
 			} else {
 				response.statusCode = 206;
-				
+
 				let start = ranges[0].start;
 				let end = ranges[0].end;
 
