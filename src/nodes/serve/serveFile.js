@@ -26,13 +26,10 @@ export default function serveFile ( filepath, request, response ) {
 
 	return stat( filepath ).then( stats => {
 		response.setHeader( 'Content-Type', mime.lookup( filepath ) );
-
 		let fileStream = createReadStream( filepath );
 
 		if ( request.headers['range'] ) {
-
 			response.setHeader( 'Accept-Ranges', 'bytes' );
-
 			const ranges = parseRange( stats.size, request.headers['range'] );
 
 			if ( ranges === -2 ) {
@@ -40,18 +37,22 @@ export default function serveFile ( filepath, request, response ) {
 				console.error(request.headers['range'])
 				response.statusCode = 400;
 				response.end();
+
 			} else if ( ranges === -1 ) {
 				// range not satisfyable
 				response.statusCode = 416;
 				response.setHeader( 'Content-Range', '*/' + stats.size );
 				response.end();
+				
 			} else if ( ranges.length > 1 ) {
 				// we only support one range
 				response.statusCode = 500;
 				response.send("Server can only return one range");
 				response.end();
+
 			} else {
 				response.statusCode = 206;
+				
 				let start = ranges[0].start;
 				let end = ranges[0].end;
 
