@@ -17,6 +17,7 @@ export default function serveFile ( filepath, request, response ) {
 
 			response.statusCode = 200;
 			response.setHeader( 'Content-Type', mime.lookup( filepath ) );
+
 			response.write( data );
 			response.end();
 		});
